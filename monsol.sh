@@ -46,7 +46,7 @@ BGMAGENTA='\033[45m' #	${BGMAGENTA}
 BGCYAN='\033[46m'    #	${BGCYAN}
 BGGRAY='\033[47m'    #	${BGGRAY}
 BGDEF='\033[49m'     #	${BGDEF}
-tput sgr0 # Возврат цвета в "нормальное" состояние
+tput sgr0            # Возврат цвета в "нормальное" состояние
 
 ### Catchup ###
 touch catchup.log
@@ -64,37 +64,38 @@ for i in "${catchaps[@]}"; do
 done
 let average=$sum/${#catchaps[*]}
 if ((min <= max_catchup_good)); then
-    echo -e "Catchup ${BLACK}${BGGREEN}GOOD${NORMAL}. Average:" $average 'Min:' $min
+    echo -e "Catchup: ${BLACK}${BGGREEN}GOOD${NORMAL}. Average:" $average 'Min:' $min
 else
-    echo -e "Catchup ${WHITE}${BGRED}NOT GOOD${NORMAL}. Average:" $average 'Min:' $min
+    echo -e "Catchup: ${WHITE}${BGRED}NOT GOOD${NORMAL}. Average:" $average 'Min:' $min
 fi
 
 ### Credits ###
 cr1=$(solana validators | grep $(solana address) | awk '{print$12}')
 sleep 5
 cr2=$(solana validators | grep $(solana address) | awk '{print$12}')
-if [[ $cr2 > $cr1 ]]; then
+if (($cr2 > $cr1)); then
     echo -e "Credits: ${BLACK}${BGGREEN}GOOD${NORMAL}" $cr2 ">" $cr1
-elif [[ $cr1 == $cr2 ]]; then
+elif (($cr1 == $cr2)); then
     echo -e "Credits: ${WHITE}${BGRED}NOT GOOD${NORMAL}" $cr2 "=" $cr1
 else
     echo -e "Credits: ${WHITE}${BGRED}FAIL${NORMAL}"
 fi
 
 ### Balance ###
-val_balance=$(solana balance ~/solana/validator-keypair.json)
-vote_balance=$(solana balance ~/solana/vote-account-keypair.json)
-topup=$(echo $vote_balance | awk '{print$1}' | awk '{print int($1)}')
-if [[ $val_balance > $min_val_balance ]]; then
-    echo -e "Validator balance: ${BLACK}${BGGREEN}$val_balance${NORMAL}"
-    echo -e "Vote balance: $vote_balance"
+val_balance=$(solana balance ~/solana/validator-keypair.json | awk '{print$1}')
+vote_balance=$(solana balance ~/solana/vote-account-keypair.json | awk '{print$1}')
+vb=$(echo $val_balance | awk '{print int($1)}')
+topup=$(echo $vote_balance | awk '{print int($1)}')
+if ((vb > min_val_balance)); then
+    echo -e "Validator balance: ${BLACK}${BGGREEN}$val_balance${NORMAL} SOL"
+    echo -e "Vote balance: $vote_balance SOL"
 else
-    echo -e "vote account balance: ${WHITE}${BGRED}$val_balance${NORMAL}"
-    echo -e "Vote balance: $vote_balance"
+    echo -e "vote account balance: ${WHITE}${BGRED}$val_balance${NORMAL} SOL"
+    echo -e "Vote balance: $vote_balance SOL"
     printf 'Validator balance is low. Do you want to top up your balance from your vote account? (y/n)? '
     read answer
     if [ "$answer" != "${answer#[Yy]}" ]; then
-        printf "How much SOL transfer to your validator account? (Maximum is $topup). Press enter to transfer maximum"
+        printf "How much SOL transfer to your validator account? (Maximum is $topup SOL). Press enter to transfer maximum"
         read amount
         if [[ $amount == "" ]]; then
             amount=$topup
