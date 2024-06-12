@@ -95,7 +95,7 @@ else
     printf 'Validator balance is low. Do you want to top up your balance from your vote account? (y/n)? '
     read answer
     if [ "$answer" != "${answer#[Yy]}" ]; then
-        printf "How much SOL transfer to your validator account? (Maximum is $topup SOL). Press enter to transfer maximum"
+        printf "How much SOL transfer to your validator account? (Maximum is $topup SOL). Press enter to transfer maximum "
         read amount
         if [[ $amount == "" ]]; then
             amount=$topup
