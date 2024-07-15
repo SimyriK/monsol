@@ -2,7 +2,7 @@
 Инструмент мотниторинга ноды Solana
 
 ### Использование
-bash < (wget -qO- https://raw.githubusercontent.com/SimyriK/monsol/main/monsol.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/SimyriK/monsol/main/monsol.sh)
 
 Фунционал:
 - Проверяет, чтобы запущена была установленная версия. (Иногда бывает, что после обновления запущена старая версия).
