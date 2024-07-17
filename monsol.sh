@@ -117,7 +117,7 @@ if [ $check_catchup = true ]; then
     until [ $i -gt $imax ]; do
         blockHeight1=$(curl -s http://127.0.0.1:8899 -X POST -H 'Content-Type: application/json' -d '[{"jsonrpc":"2.0","id":1, "method":"getMaxRetransmitSlot"},{"jsonrpc":"2.0","id":1, "method":"getSlot", "params":[{"commitment": "confirmed"}]}]' | jq -r '.[1].result')
         slotHeight1=$(solana slot --commitment confirmed)
-        sleep 0.4
+        sleep 0.459
         if ((blockHeight0 < blockHeight1)) | ((slotHeight0 < slotHeight1)); then
             blockHeight0=$blockHeight1
             slotHeight0=$slotHeight1
@@ -222,7 +222,7 @@ if [ $check_slots = true ]; then
     scheduleSlots=$(curl -s http://127.0.0.1:8899 -X POST -H "Content-Type: application/json" -d ' { "jsonrpc": "2.0", "id": 1, "method": "getLeaderSchedule", "params": [ null, { "identity": '\"$IDENTITYPUBKEY\"' } ] }' | jq '.result.'\"$IDENTITYPUBKEY\"'  | [.[] + '$firstSlotInEpoch']')
     scheduled_slots=$(jq -r 'length' <<<$scheduleSlots)
     nearestSlot=$(jq -r "[.[] | select (.> $blockHeight)] | .[1]" <<<$scheduleSlots)
-    min_to_nearest_slot=$(echo "scale=2 ; ($nearestSlot - $blockHeight) * 0.4 / 60" | bc) # 0.4 sec to slot
+    min_to_nearest_slot=$(echo "scale=2 ; ($nearestSlot - $blockHeight) * 0.459 / 60" | bc) # 0.459 sec to slot
     if (($os < $as)); then
         echo -e "${BLACK}${BGGREEN}Slots:${NORMAL} Produced: ${BOLD}$produced_slots${NORMAL}/${BOLD}$leader_slots${NORMAL} of ${BOLD}$scheduled_slots${NORMAL}, Skipped: ${BOLD}$skipped_slots${NORMAL}, Next: ~${BOLD}$min_to_nearest_slot${NORMAL} min"
         # echo -e "${BLACK}${BGGREEN}Slots:${NORMAL} Scheduled: ${BOLD}$scheduled_slots${NORMAL}, Leader: ${BOLD}$leader_slots${NORMAL}, Produced: ${BOLD}$produced_slots${NORMAL}, Skipped: ${BOLD}$skipped_slots${NORMAL}, Next: ~${BOLD}$min_to_nearest_slot${NORMAL} min"
