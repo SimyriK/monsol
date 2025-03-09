@@ -79,7 +79,11 @@ if [ $check_credit = true ] || [ $check_version = true ] || [ $check_skiprate = 
     VOTEACCOUNT=$(jq -r '.voteAccountPubkey' <<<$validatorInfo0)
 fi
 if [ $check_version = true ]; then
-    installed_ver=$(solana --version | awk '{print$2}')
+    if [[ "$(solana --version | awk '{print$5}')" == "client:Firedancer)" ]]; then
+        installed_ver=$(fdctl --version | awk '{print$1}')
+    else
+        installed_ver=$(solana --version | awk '{print$2}')
+    fi
     if [[ $installed_ver == $running_ver ]]; then
         echo -e "${BLACK}${BGGREEN}Version:${NORMAL} ${BOLD}$running_ver${NORMAL}"
     else
