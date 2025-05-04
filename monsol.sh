@@ -80,7 +80,7 @@ if [ $check_credit = true ] || [ $check_version = true ] || [ $check_skiprate = 
 fi
 if [ $check_version = true ]; then
     if [[ "$(solana --version | awk '{print$5}')" == "client:Firedancer)" ]]; then
-        installed_ver=$(fdctl --version | awk '{print$1}')
+        installed_ver=$(fdctl version --config /home/firedancer/solana_fd/solana-testnet.toml | awk '{print$1}')
     else
         installed_ver=$(solana --version | awk '{print$2}')
     fi
